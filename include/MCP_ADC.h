@@ -1,5 +1,5 @@
-#ifndef __MCP_ADC_H__
-#define __MCP_ADC_H__
+#ifndef MCP_ADC
+#define MCP_ADC
 
 #include "AnalogSensorsInterface.h"
 
@@ -31,4 +31,4 @@ public:
 
 #include "MCP_ADC.tpp"
 
-#endif /* __MCP_ADC_H__ */
+#endif /* MCP_ADC */
