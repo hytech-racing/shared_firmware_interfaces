@@ -7,7 +7,6 @@
 
 void test_MCP_ADC_sample()
 {
-    Serial.println("Print sth");
     MCP_ADC<8> mcp3208(33);
 
     mcp3208.sample();
