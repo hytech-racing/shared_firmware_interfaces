@@ -18,7 +18,7 @@ OrbisBR10::OrbisBR10(HardwareSerial* serial)
 
 void OrbisBR10::init()
 {
-    serial_->begin(serialSpeed);
+    serial_->begin(serialSpeed_);
 }
 
 void OrbisBR10::sample()
