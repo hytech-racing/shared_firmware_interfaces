@@ -7,15 +7,18 @@ OrbisBR10::OrbisBR10(HardwareSerial* serial, int serialSpeed)
     data_ = 0;
     offset_ = 0.0;
     // Initialize with all errors/warnings set
-    status_ = ORBIS_BR10_BITMASK_GENERAL | ORBIS_BR10_BITMASK_DETAILED;
-
-    serial_->begin(serialSpeed);
+    status_ = ORBIS_BR10_BITMASK_GENERAL | ORBIS_BR10_BITMASK_DETAILED;    
 }
 
 OrbisBR10::OrbisBR10(HardwareSerial* serial)
 : OrbisBR10(serial, ORBIS_BR10_DEFAULT_SERIAL_SPEED)
 {
 
+}
+
+void OrbisBR10::init()
+{
+    serial_->begin(serialSpeed);
 }
 
 void OrbisBR10::sample()

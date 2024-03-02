@@ -32,6 +32,7 @@ public:
     OrbisBR10(HardwareSerial* serial);
 
 // Functions
+    void init();
     void sample();
     SteeringEncoderConversion_s convert();
     void setOffset(float newOffset);

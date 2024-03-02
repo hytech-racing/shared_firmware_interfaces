@@ -24,6 +24,7 @@ public:
     MCP_ADC(int spiPinCS);
 
 // Functions
+    void init();
     /* Tick at 100Hz */
     void tick();
     void sample();

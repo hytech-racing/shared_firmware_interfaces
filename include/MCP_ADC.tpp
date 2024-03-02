@@ -13,22 +13,22 @@ MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS, const int spiPinSDI, 
     {
         MCP_ADC<MCP_ADC_NUM_CHANNELS>::channels_[i] = AnalogChannel();
     }
-
-    pinMode(spiPinCS_, OUTPUT);
-    pinMode(spiPinSDI_, INPUT);
-    pinMode(spiPinSDO_, OUTPUT);
-    pinMode(spiPinCLK_, OUTPUT);
-
-    digitalWrite(spiPinCS_, HIGH);
-
-    // initializes the SPI bus by setting SCK, MOSI, and SS to outputs
-    // pulling SCK and MOSI low, and SS high
-    SPI.begin();
 }
 
 template <int MCP_ADC_NUM_CHANNELS>
 MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS__)
 : MCP_ADC<MCP_ADC_NUM_CHANNELS>(spiPinCS__, MCP_ADC_DEFAULT_SPI_SDI, MCP_ADC_DEFAULT_SPI_SDO, MCP_ADC_DEFAULT_SPI_CLK, MCP_ADC_DEFAULT_SPI_SPEED) {}
+
+template <int MCP_ADC_NUM_CHANNELS>
+void MCP_ADC<MCP_ADC_NUM_CHANNELS>::init()
+{
+    // pinMode(spiPinCS_, OUTPUT);
+    // pinMode(spiPinSDI_, INPUT);
+    // pinMode(spiPinSDO_, OUTPUT);
+    // pinMode(spiPinCLK_, OUTPUT);
+
+    digitalWrite(spiPinCS_, HIGH);
+}
 
 template <int MCP_ADC_NUM_CHANNELS>
 void MCP_ADC<MCP_ADC_NUM_CHANNELS>::tick()
