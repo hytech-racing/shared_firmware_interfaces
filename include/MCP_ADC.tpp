@@ -22,10 +22,10 @@ MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS__)
 template <int MCP_ADC_NUM_CHANNELS>
 void MCP_ADC<MCP_ADC_NUM_CHANNELS>::init()
 {
-    // pinMode(spiPinCS_, OUTPUT);
-    // pinMode(spiPinSDI_, INPUT);
-    // pinMode(spiPinSDO_, OUTPUT);
-    // pinMode(spiPinCLK_, OUTPUT);
+    pinMode(spiPinCS_, OUTPUT);
+    pinMode(spiPinSDI_, INPUT);
+    pinMode(spiPinSDO_, OUTPUT);
+    pinMode(spiPinCLK_, OUTPUT);
 
     digitalWrite(spiPinCS_, HIGH);
 }
