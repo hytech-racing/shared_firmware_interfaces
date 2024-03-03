@@ -84,6 +84,20 @@ public:
         return data;
     }
 
+    /// @brief Set the scale of an internal conversion channel
+    void setChannelScale(int channel, float scale)
+    {
+        if (channel < N)
+            channels_[channel].scale = scale;
+    }
+
+    /// @brief Set the offset of an internal conversion channel
+    void setChannelOffset(int channel, float offset)
+    {
+        if (channel < N)
+            channels_[channel].offset = offset;
+    }
+
     /// @brief Performs unit conversions on all channels
     void convert()
     {
