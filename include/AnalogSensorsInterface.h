@@ -51,7 +51,7 @@ public:
     /// @return Sensor's calculated output in real units, whether the result was clamped (AnalogSensorStatus_s)
     AnalogConversion_s convert()
     {
-        float conversion = lastSample * scale + offset;
+        float conversion = (lastSample + offset) * scale;
         float clampedConversion = std::min(std::max(conversion, clampLow), clampHigh);
         AnalogSensorStatus_e returnStatus = AnalogSensorStatus_e::ANALOG_SENSOR_GOOD;
         if (clamp && (conversion > clampHigh || conversion < clampLow))
