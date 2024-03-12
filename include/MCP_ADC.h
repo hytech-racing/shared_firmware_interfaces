@@ -21,6 +21,7 @@ private:
 public:
 // Constructors
     MCP_ADC(int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed);
+    MCP_ADC(int spiPinCS, const int spiSpeed);
     MCP_ADC(int spiPinCS);
 
 // Functions
