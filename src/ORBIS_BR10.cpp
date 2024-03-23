@@ -30,7 +30,7 @@ void OrbisBR10::sample()
         readByte[0] = serial_->read(); //lower half of steering
         readByte[1] = serial_->read(); //upper half of steering
         readByte[2] = serial_->read(); //error stream 
-        data_ = (readByte[0] << 6) | (readByte[1] >> 2);
+        data_ = (int16_t)(((uint16_t)readByte[0]) << 8) | ((uint16_t)readByte[1]);
         status_ = readByte[1] & ORBIS_BR10_BITMASK_GENERAL;
         status_ |= readByte[2] & ORBIS_BR10_BITMASK_DETAILED;
     }

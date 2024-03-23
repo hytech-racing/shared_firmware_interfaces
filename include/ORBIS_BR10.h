@@ -6,7 +6,7 @@
 
 // Definitions
 const int      ORBIS_BR10_DEFAULT_SERIAL_SPEED              = 115200;
-const float    ORBIS_BR10_SCALE                             = 0.0219726562; // 360 degrees per 14 bits
+const float    ORBIS_BR10_SCALE                             = 0.0219726562 / 4; // 360 degrees per 14 bits / 4 for signed number
 const uint16_t ORBIS_BR10_BITMASK_GENERAL_WARNING           = (0b1 << 0);
 const uint16_t ORBIS_BR10_BITMASK_GENERAL_ERROR             = (0b1 << 1);
 const uint16_t ORBIS_BR10_BITMASK_GENERAL                   = (ORBIS_BR10_BITMASK_GENERAL_WARNING | ORBIS_BR10_BITMASK_GENERAL_ERROR);
