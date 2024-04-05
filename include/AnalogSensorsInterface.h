@@ -98,6 +98,15 @@ public:
             channels_[channel].offset = offset;
     }
 
+    void setChannelClamp(int channel, float clampLow, float clampHigh)
+    {
+        if (channel < N) {
+            channels_[channel].clampLow = clampLow;
+            channels_[channel].clampHigh = clampHigh;
+            channels_[channel].clamp = true;
+        }
+    }
+
     /// @brief Performs unit conversions on all channels
     void convert()
     {
