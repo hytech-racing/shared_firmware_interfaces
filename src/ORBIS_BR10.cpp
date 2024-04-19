@@ -66,3 +66,15 @@ void OrbisBR10::setOffset(float newOffset)
 {
     offset_ = newOffset;
 }
+
+bool OrbisBR10::isAlive()
+{
+    serial_->write(0x76);
+    if (serial_->available() >= 7 && serial_->read() == 0x76) 
+    {
+        for (int i = 0; i < 6; i++)
+            serial_->read();
+        return true;
+    }
+    return false;
+}

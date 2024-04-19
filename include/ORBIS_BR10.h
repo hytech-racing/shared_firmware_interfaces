@@ -36,6 +36,7 @@ public:
     void sample();
     SteeringEncoderConversion_s convert();
     void setOffset(float newOffset);
+    bool isAlive();
 };
 
 #endif /* ORBIS_BR10 */
