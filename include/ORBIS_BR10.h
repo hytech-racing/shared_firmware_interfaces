@@ -5,8 +5,9 @@
 #include "SteeringEncoderInterface.h"
 
 // Definitions
+const bool     ORBIS_BR10_FLIP_DIRECTION                    = true;
 const int      ORBIS_BR10_DEFAULT_SERIAL_SPEED              = 115200;
-const float    ORBIS_BR10_SCALE                             = 0.0219726562 / 4; // 360 degrees per 14 bits / 4 for signed number
+const float    ORBIS_BR10_SCALE                             = 0.0219726562; // 360 degrees per 14 bits
 const uint16_t ORBIS_BR10_BITMASK_GENERAL_WARNING           = (0b1 << 0);
 const uint16_t ORBIS_BR10_BITMASK_GENERAL_ERROR             = (0b1 << 1);
 const uint16_t ORBIS_BR10_BITMASK_GENERAL                   = (ORBIS_BR10_BITMASK_GENERAL_WARNING | ORBIS_BR10_BITMASK_GENERAL_ERROR);
@@ -24,7 +25,7 @@ private:
     HardwareSerial* serial_;
     int serialSpeed_;
     int data_;
-    float offset_;
+    float offset_ = 0.0f;
     char status_;
 public:
 // Constructors
@@ -36,7 +37,6 @@ public:
     void sample();
     SteeringEncoderConversion_s convert();
     void setOffset(float newOffset);
-    bool isAlive();
 };
 
 #endif /* ORBIS_BR10 */

@@ -30,8 +30,8 @@ void OrbisBR10::sample()
         readByte[0] = serial_->read(); //lower half of steering
         readByte[1] = serial_->read(); //upper half of steering
         readByte[2] = serial_->read(); //error stream 
-        data_ = (int16_t)(((uint16_t)readByte[0]) << 8) | ((uint16_t)readByte[1]);
-        status_ = readByte[1] & ORBIS_BR10_BITMASK_GENERAL;
+        data_ = (int16_t)(((uint16_t)readByte[0]) << 6) | ((uint16_t)readByte[1] >> 2);
+        status_ = ~readByte[1] & ORBIS_BR10_BITMASK_GENERAL;
         status_ |= readByte[2] & ORBIS_BR10_BITMASK_DETAILED;
     }
     else
@@ -46,6 +46,20 @@ SteeringEncoderConversion_s OrbisBR10::convert()
     SteeringEncoderConversion_s returnConversion;
     returnConversion.raw = data_;
     returnConversion.angle = (data_ * ORBIS_BR10_SCALE) + offset_;
+
+    // Apply modulo
+    while (returnConversion.angle < 0.0f)
+        returnConversion.angle += 360.0f;
+
+    while (returnConversion.angle > 360.0f)
+        returnConversion.angle -= 360.0f;
+
+    // Apply wraparound fix
+    if (returnConversion.angle > 180.0f)
+        returnConversion.angle = returnConversion.angle - 360.0f;
+    
+    if (ORBIS_BR10_FLIP_DIRECTION)
+        returnConversion.angle *= -1.0f;
 
     if (status_ & (ORBIS_BR10_BITMASK_GENERAL_ERROR | ORBIS_BR10_BITMASK_DETAILED_COUNTER_ERROR))
     {
@@ -65,16 +79,4 @@ SteeringEncoderConversion_s OrbisBR10::convert()
 void OrbisBR10::setOffset(float newOffset)
 {
     offset_ = newOffset;
-}
-
-bool OrbisBR10::isAlive()
-{
-    serial_->write(0x76);
-    if (serial_->available() >= 7 && serial_->read() == 0x76) 
-    {
-        for (int i = 0; i < 6; i++)
-            serial_->read();
-        return true;
-    }
-    return false;
 }
