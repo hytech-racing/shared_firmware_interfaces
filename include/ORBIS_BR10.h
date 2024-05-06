@@ -27,15 +27,26 @@ private:
     int data_;
     float offset_ = 0.0f;
     char status_;
+    void send_command_sequence_();
+    void set_offset_(uint32_t pos);
+    void save_parameters_();
 public:
 // Constructors
     OrbisBR10(HardwareSerial* serial, int serialSpeed);
     OrbisBR10(HardwareSerial* serial);
 
 // Functions
+    void calibrate_sensor();
     void init();
     void sample();
     SteeringEncoderConversion_s convert();
+    
+    // function that when called will set the current position as the zero position 
+    
+    
+    
+    uint8_t check_calibration_status();
+
     void setOffset(float newOffset);
 };
 
