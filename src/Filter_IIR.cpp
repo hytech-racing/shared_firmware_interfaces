@@ -18,3 +18,9 @@ uint16_t Filter_IIR::filtered_result(uint16_t new_val) {
 
     return prev_reading;
 }
+
+template <int N>
+void FilterIIRMulti<int N>::setAlphas(int channel, float alpha) 
+{
+    filter_channels_[channel].set_alpha(alpha);
+}
