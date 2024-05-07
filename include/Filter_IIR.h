@@ -38,7 +38,10 @@ protected:
     Filter_IIR filter_channels_[N];
 public:
     void tick(unsigned long curr_millis);
-    void setAlphas(int channel, float alpha);
+    virtual void setAlphas(int channel, float alpha) 
+    {
+    filter_channels_[channel].set_alpha(alpha);
+    }
 };
 
 #endif
