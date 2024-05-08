@@ -34,7 +34,7 @@ void Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::sample()
 {
     for (int i = 0; i < TEENSY_ADC_NUM_CHANNELS; i++) {
         uint16_t val = analogRead(_pins[i]);
-        Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::channels_[i].lastSample = (Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::filter_channels_[i].filteredResult(val) & (~(1 << TEENSY_ADC_DEFAULT_RESOLUTION)));
+        Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::channels_[i].lastSample = (Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::filter_channels_[i].filtered_result(val) & (~(1 << TEENSY_ADC_DEFAULT_RESOLUTION)));
     }
     
 }
