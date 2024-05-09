@@ -18,3 +18,4 @@ uint16_t Filter_IIR::filtered_result(uint16_t new_val) {
 
     return prev_reading;
 }
+

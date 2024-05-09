@@ -31,5 +31,17 @@ private:
     uint16_t prev_reading;
 };
 
+template <int N>
+class FilterIIRMulti
+{
+protected:
+    Filter_IIR filter_channels_[N];
+public:
+    virtual void setAlphas(int channel, float alpha) 
+    {
+    filter_channels_[channel].set_alpha(alpha);
+    }
+};
+
 #endif
 #pragma once
