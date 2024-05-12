@@ -3,7 +3,7 @@
 
 #include <tuple>
 #include <algorithm>
-
+#include "SharedFirmwareTypes.h"
 class AnalogChannel
 {
 public:
