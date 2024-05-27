@@ -6,7 +6,6 @@
 
 #define DEFAULT_ALPHA 0.0
 
-template <typename dataType>
 class Filter_IIR
 {
 
@@ -14,7 +13,7 @@ public:
     /**
      * Constructors
      */
-    Filter_IIR(float alpha, dataType init_val=0) {
+    Filter_IIR(float alpha, uint16_t init_val=0) {
         set_alpha(alpha);
         prev_reading = init_val;
     }
@@ -23,22 +22,20 @@ public:
     }
 
     void set_alpha(float alpha);
-    dataType get_prev_reading() const {return prev_reading;}
+    uint16_t get_prev_reading() const {return prev_reading;}
 
-    dataType filtered_result(dataType new_val);
+    uint16_t filtered_result(uint16_t new_val);
     
 private:    
     float alpha;
-    dataType prev_reading;
+    uint16_t prev_reading;
 };
 
-#include "Filter_IIR.tpp"
-
-template <typename dataType, int N>
+template <int N>
 class FilterIIRMulti
 {
 protected:
-    Filter_IIR<dataType> filter_channels_[N];
+    Filter_IIR filter_channels_[N];
 public:
     virtual void setAlphas(int channel, float alpha) 
     {
