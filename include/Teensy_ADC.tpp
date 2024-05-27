@@ -43,7 +43,7 @@ template <int TEENSY_ADC_NUM_CHANNELS>
 void Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::setAlphas(int pin, float alpha){
     for(int i = 0; i < TEENSY_ADC_NUM_CHANNELS; i++) {
         if(pin == this->_pins[i]) {
-            FilterIIRMulti<uint16_t, TEENSY_ADC_NUM_CHANNELS>::setAlphas(i, alpha);
+            FilterIIRMulti<TEENSY_ADC_NUM_CHANNELS>::setAlphas(i, alpha);
             break;
         }
     }
