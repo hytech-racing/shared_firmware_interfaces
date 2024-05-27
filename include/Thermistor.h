@@ -58,7 +58,7 @@ public:
         _r0 = params._r0;
     }
 
-    virtual float convert(uint16_t raw) //can be overriden in the case its a diff thermistor type.
+    virtual float convert(const uint16_t raw) //can be overriden in the case its a diff thermistor type.
     {
         float _t0_kelvin = _t0_celcius + _zero_kelvin;
         float resistance;
