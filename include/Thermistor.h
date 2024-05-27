@@ -58,7 +58,7 @@ public:
         _r0 = params._r0;
     }
 
-    virtual void convert(uint16_t raw) //can be overriden in the case its a diff thermistor type.
+    virtual float convert(uint16_t raw) //can be overriden in the case its a diff thermistor type.
     {
         float _t0_kelvin = _t0_celcius + _zero_kelvin;
         float resistance;
@@ -70,6 +70,7 @@ public:
         temp_kelvin = 1/ (1/_t0_kelvin + log(resistance/_r_nom)/_beta);
         temp_celcius = temp_kelvin - _zero_kelvin;
         _temp_celcius = temp_celcius;
+        return _temp_celcius;
     }
 
     float getTemp() {
@@ -94,12 +95,6 @@ class Thermistors
     const Thermistor& get(int channel) 
     {
         return thermistors_[channel];
-    }
-    void conversions() {
-        for (int i = 0; i < NUM_THERMISTORS; i++) 
-        {
-            thermistors_[i].convert();    
-        }
     }
     
     void tick(unsigned long curr_millis);
