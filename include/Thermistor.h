@@ -87,6 +87,10 @@ class Thermistors
 
     Thermistors()
     {
+        thermistors_init();
+    }
+
+    void thermistors_init() {
         for (int i = 0; i < NUM_THERMISTORS; i++)
         {
             thermistors_[i] = Thermistor();
