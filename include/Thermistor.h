@@ -41,6 +41,8 @@ public:
         _t0_celcius = t0_celcius;
         _r_nom = r_nom;
         _r0 = r0;
+        _raw = 0;
+        _temp_celcius = 0;
     }
     Thermistor()
         : Thermistor(DEFAULT_THERM_BETA, DEFAULT_ADC_SATUR, DEFAULT_ZERO_KELVIN, DEFAULT_T0_CELCIUS, DEFAULT_R_NOM, DEFAULT_R0) {
