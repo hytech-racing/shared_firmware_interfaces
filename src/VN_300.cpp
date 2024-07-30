@@ -783,13 +783,11 @@ void VN_300::init()
     serial_->begin(DEFAULT_SERIAL_BAUDRATE);
     // Wait for IMU to wake up  - Shayan
     delay(START_UP_DELAY);
-    // Jack up baudrate. 128000 is the highest we can go, limitation unknown
-    // setSerialBaudrate((serialSpeed_ <= VN_SERIAL_BAUDRATE7) ? serialSpeed_ : VN_SERIAL_BAUDRATE7);
+    // Jack up baudrate
     setSerialBaudrate(serialSpeed_);
     // End current serial comm.
     serial_->end();
     // Resart serial with new baudrate
-    // serial_->begin((serialSpeed_ <= VN_SERIAL_BAUDRATE7) ? serialSpeed_ : VN_SERIAL_BAUDRATE7);
     serial_->begin(serialSpeed_);
 
     // Configure sensor
