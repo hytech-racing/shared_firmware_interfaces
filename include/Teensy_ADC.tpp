@@ -8,7 +8,7 @@ Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::Teensy_ADC(const int* pins)
     {
         _pins[i] = pins[i];
         Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::channels_[i] = AnalogChannel();
-        Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::filter_channels_[i] = Filter_IIR(0, analogRead(_pins[i]));
+        Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::filter_channels_[i] = Filter_IIR<uint16_t>(0, analogRead(_pins[i]));
     }
     
 }
@@ -43,7 +43,7 @@ template <int TEENSY_ADC_NUM_CHANNELS>
 void Teensy_ADC<TEENSY_ADC_NUM_CHANNELS>::setAlphas(int pin, float alpha){
     for(int i = 0; i < TEENSY_ADC_NUM_CHANNELS; i++) {
         if(pin == this->_pins[i]) {
-            FilterIIRMulti<TEENSY_ADC_NUM_CHANNELS>::setAlphas(i, alpha);
+            FilterIIRMulti<uint16_t, TEENSY_ADC_NUM_CHANNELS>::setAlphas(i, alpha);
             break;
         }
     }

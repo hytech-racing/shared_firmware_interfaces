@@ -116,9 +116,9 @@ enum TimeGroup
 	TIMEGROUP_TIMESYNCIN			= 0x0010,	///< TimeSyncIn.
 	TIMEGROUP_TIMEGPSPPS			= 0x0020,	///< TimeGpsPps.
 	TIMEGROUP_TIMEUTC				= 0x0040,	///< TimeUTC.
-	TIMEGROUP_SYNCINCNT			= 0x0080,	///< SyncInCnt.
-  TIMEGROUP_SYNCOUTCNT    = 0x0100,	///< SyncOutCnt.
-  TIMEGROUP_TIMESTATUS    = 0x0200	///< TimeStatus.
+	TIMEGROUP_SYNCINCNT			    = 0x0080,	///< SyncInCnt.
+    TIMEGROUP_SYNCOUTCNT            = 0x0100,	///< SyncOutCnt.
+    TIMEGROUP_TIMESTATUS            = 0x0200	///< TimeStatus.
 };
 
 /// \brief Flags for the binary group 3 'IMU' in the binary output registers.
@@ -146,17 +146,17 @@ enum GpsGroup
 	GPSGROUP_UTC					= 0x0001,	///< UTC.
 	GPSGROUP_TOW					= 0x0002,	///< Tow.
 	GPSGROUP_WEEK					= 0x0004,	///< Week.
-	GPSGROUP_NUMSATS			= 0x0008,	///< NumSats.
+	GPSGROUP_NUMSATS			    = 0x0008,	///< NumSats.
 	GPSGROUP_FIX					= 0x0010,	///< Fix.
-	GPSGROUP_POSLLA				= 0x0020,	///< PosLla.
-	GPSGROUP_POSECEF			= 0x0040,	///< PosEcef.
-	GPSGROUP_VELNED				= 0x0080,	///< VelNed.
-	GPSGROUP_VELECEF			= 0x0100,	///< VelEcef.
+	GPSGROUP_POSLLA				    = 0x0020,	///< PosLla.
+	GPSGROUP_POSECEF			    = 0x0040,	///< PosEcef.
+	GPSGROUP_VELNED				    = 0x0080,	///< VelNed.
+	GPSGROUP_VELECEF			    = 0x0100,	///< VelEcef.
 	GPSGROUP_POSU					= 0x0200,	///< PosU.
 	GPSGROUP_VELU					= 0x0400,	///< VelU.
-	GPSGROUP_TIMEU				= 0x0800,	///< TimeU.
-  GPSGROUP_TIMEINFO     = 0x1000,	///< TimeInfo.
-  GPSGROUP_DOP          = 0x2000,	///< Dop.
+	GPSGROUP_TIMEU				    = 0x0800,	///< TimeU.
+    GPSGROUP_TIMEINFO               = 0x1000,	///< TimeInfo.
+    GPSGROUP_DOP                    = 0x2000,	///< Dop.
 };
 
 /// \brief Flags for the binary group 5 'Attitude' in the binary output registers.
