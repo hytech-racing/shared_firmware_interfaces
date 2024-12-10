@@ -5,6 +5,12 @@
 #include <algorithm>
 #include "SharedFirmwareTypes.h"
 
+/**
+ * The AnalogChannel class represents one individual "channel" of an ADC. Each Channel
+ * has its own scale, offsets, and clamp. An AnalogMultiSensor has several AnalogChannels.
+ * To use an AnalogChannel properly, you need to first sample the data and place the raw
+ * conversion into lastSample. Then, you can call convert() to retrieve the data.
+ */
 class AnalogChannel
 {
 public:
