@@ -4,10 +4,11 @@
 #include <tuple>
 #include <algorithm>
 #include "SharedFirmwareTypes.h"
+
 class AnalogChannel
 {
 public:
-// Data
+    /* Data */
     float scale;
     float offset;
     bool clamp;
@@ -15,7 +16,7 @@ public:
     float clampHigh;
     int lastSample;
 
-// Constructors
+    /* Constructors */
     AnalogChannel(float scale_, float offset_, bool clamp_, float clampLow_, float clampHigh_)
     : scale(scale_),
       offset(offset_),
@@ -27,9 +28,11 @@ public:
     AnalogChannel()
     : AnalogChannel(1.0, 0.0, false, __FLT_MIN__, __FLT_MAX__) {}
     
-// Functions
-    /// @brief Calculate sensor output and whether result is in sensor's defined bounds. DOES NOT SAMPLE.
-    /// @return Sensor's calculated output in real units, whether the result was clamped (AnalogSensorStatus_s)
+    /* Functions*/
+    /**
+     * Calculates sensor output and whether result is in the sensor's defined bounds. This DOES NOT SAMPLE.
+     * @return This AnalogChannel's output AnalogConversion_s (raw reading, real value, and status).
+     */
     AnalogConversion_s convert()
     {
         float conversion = (lastSample + offset) * scale;
@@ -45,6 +48,11 @@ public:
     }
 };
 
+/**
+ * The AnalogMultiSensor is the base class for specific analog sensor interfaces. Each specific
+ * analog sensor (the MCP, Teensy, etc) are children of this class. To use this class, you need
+ * to call sample() and convert().
+ */
 template <int N>
 class AnalogMultiSensor
 {
@@ -53,32 +61,45 @@ protected:
     AnalogChannel channels_[N];
 public:
     AnalogConversionPacket_s<N> data;
-// Functions
-    /// @brief Called by the main loop. Allows AnalogMultiSensor devices not owned by a single system to self-actualize sampling & conversion.
-    /// @param tick 
+
+    /* Functions */
+
+    /**
+     * The tick() function in each subclass should call sample() and then convert() to update the data field.
+     */
     void tick(unsigned long curr_millis);
 
-    /// @brief Used by systems to get data out of this device when it's self-actualizing sampling & conversion.
-    /// @return Const ref to last data conversion.
+    /**
+     * Used by systems to retrieve the data field.
+     */
     const AnalogConversionPacket_s<N>& get()
     {
         return data;
     }
 
-    /// @brief Set the scale of an internal conversion channel
+    /**
+     * Sets the scale of the internal conversion channel.
+     */
     void setChannelScale(int channel, float scale)
     {
         if (channel < N)
             channels_[channel].scale = scale;
     }
 
-    /// @brief Set the offset of an internal conversion channel
+    /**
+     * Sets the offset of the internal conversion channel.
+     */
     void setChannelOffset(int channel, float offset)
     {
         if (channel < N)
             channels_[channel].offset = offset;
     }
 
+    /**
+     * Sets the clamp of the internal conversion channel. The min and max values (to clamp to)
+     * are in actual (post-conversion) units. Calling this function will also set the channel's
+     * clamp boolean to true to enable clamping. There is no way to programmatically disable clamping.
+     */
     void setChannelClamp(int channel, float clampLow, float clampHigh)
     {
         if (channel < N) {
@@ -88,7 +109,19 @@ public:
         }
     }
 
-    /// @brief Performs unit conversions on all channels
+    /**
+     * Sets both the scale and offset of the given channel by calling setChannelOffset and setChannelClamp.
+     */
+    void setChannelClampAndOffset(int channel, float scale, float offset)
+    {
+        setChannelScale(channel, scale);
+        setChannelOffset(channel, offset);
+    }
+
+    /**
+     * Performs unit conversions on all channels.
+     * @post The data field will be updated with the new conversions of each channel.
+     */
     void convert()
     {
         for (int i = 0; i < N; i++)
@@ -97,8 +130,12 @@ public:
         }
     }
 
-    /// @brief Commands the underlying device to sample all channels and internally store the results
+    /**
+     * Commands the underlying device to sample all channels and internall store the results.
+     * @post The lastSample field of each AnalogChannel in channels_ must contain the new value.
+     */
     void sample();
+
 };
 
 #endif /* ANALOGSENSORSINTERFACE */
