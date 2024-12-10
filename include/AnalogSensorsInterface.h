@@ -3,39 +3,7 @@
 
 #include <tuple>
 #include <algorithm>
-
-/**
- * AnalogSensorStatus_e gets packaged along with the AnalogConversion_s struct as
- * the output of an AnalogChannel.
- */
-enum class AnalogSensorStatus_e
-{
-    ANALOG_SENSOR_GOOD = 0,
-    ANALOG_SENSOR_CLAMPED = 1,
-};
-
-/**
- * The AnalogConversion_s is the output struct for an AnalogChannel. It includes
- * the original analog value (for debugging purposes), the converted value according
- * to the configured scale, offset, and clamp, and the status (good or clamped).
- */
-struct AnalogConversion_s
-{
-    int raw;
-    float conversion;
-    AnalogSensorStatus_e status;
-};
-
-/**
- * The AnalogConversionPacket_s is the output of an AnalogMultiSensor, which includes
- * each channel's output packet (an AnalogConversion_s). This is templated to account
- * for multi-sensors with different numbers of channels (2, 4, 8-channel ADCs).
- */
-template <int N>
-struct AnalogConversionPacket_s
-{
-    AnalogConversion_s conversions[N];
-};
+#include "SharedFirmwareTypes.h"
 
 /**
  * The AnalogChannel class represents one individual "channel" of an ADC. Each Channel
@@ -46,7 +14,7 @@ struct AnalogConversionPacket_s
 class AnalogChannel
 {
 public:
-// Data
+    /* Data */
     float scale;
     float offset;
     bool clamp;
@@ -54,7 +22,7 @@ public:
     float clampHigh;
     int lastSample;
 
-// Constructors
+    /* Constructors */
     AnalogChannel(float scale_, float offset_, bool clamp_, float clampLow_, float clampHigh_)
     : scale(scale_),
       offset(offset_),
@@ -66,7 +34,7 @@ public:
     AnalogChannel()
     : AnalogChannel(1.0, 0.0, false, __FLT_MIN__, __FLT_MAX__) {}
     
-// Functions
+    /* Functions*/
     /**
      * Calculates sensor output and whether result is in the sensor's defined bounds. This DOES NOT SAMPLE.
      * @return This AnalogChannel's output AnalogConversion_s (raw reading, real value, and status).
@@ -99,7 +67,8 @@ protected:
     AnalogChannel channels_[N];
 public:
     AnalogConversionPacket_s<N> data;
-// Functions
+
+    /* Functions */
 
     /**
      * The tick() function in each subclass should call sample() and then convert() to update the data field.
@@ -147,6 +116,15 @@ public:
     }
 
     /**
+     * Sets both the scale and offset of the given channel by calling setChannelOffset and setChannelClamp.
+     */
+    void setChannelClampAndOffset(int channel, float scale, float offset)
+    {
+        setChannelScale(channel, scale);
+        setChannelOffset(channel, offset);
+    }
+
+    /**
      * Performs unit conversions on all channels.
      * @post The data field will be updated with the new conversions of each channel.
      */
@@ -163,6 +141,7 @@ public:
      * @post The lastSample field of each AnalogChannel in channels_ must contain the new value.
      */
     void sample();
+
 };
 
 #endif /* ANALOGSENSORSINTERFACE */
