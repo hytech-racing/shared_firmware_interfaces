@@ -6,6 +6,6 @@
     "platforms": "*",
     "dependencies":
     {
-      "shared_firmware_types": "https://github.com/hytech-racing/shared_firmware_types.git#40a69c8"
+      "shared_firmware_types": "https://github.com/hytech-racing/shared_firmware_types.git#118e8b9"
     }
   }
