@@ -118,7 +118,7 @@ public:
     /**
      * Sets both the scale and offset of the given channel by calling setChannelOffset and setChannelClamp.
      */
-    void setChannelClampAndOffset(int channel, float scale, float offset)
+    void setChannelScaleAndOffset(int channel, float scale, float offset)
     {
         setChannelScale(channel, scale);
         setChannelOffset(channel, offset);
