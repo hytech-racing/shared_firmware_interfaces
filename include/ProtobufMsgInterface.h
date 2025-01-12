@@ -14,7 +14,7 @@ struct ETHInterfaces
 
 // this should be usable with arbitrary functions idk something
 template <size_t buffer_size, typename pb_msg_type, class eth_interface>
-void handle_ethernet_socket_receive(const SysTick_s& tick, qindesign::network::EthernetUDP *socket, std::function<void(unsigned long, const uint8_t *, size_t, eth_interface &, const pb_msgdesc_t *)> recv_function, eth_interface &interface, const pb_msgdesc_t *desc_pointer)
+void handle_ethernet_socket_receive(qindesign::network::EthernetUDP *socket, std::function<void(unsigned long, const uint8_t *, size_t, eth_interface &, const pb_msgdesc_t *)> recv_function, eth_interface &interface, const pb_msgdesc_t *desc_pointer)
 {
     int packet_size = socket->parsePacket();
     if (packet_size > 0)
