@@ -56,4 +56,16 @@ void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, 
     }
 }
 
+namespace CAN_util
+{
+    template <typename can_struct, typename queue_type>
+    void enqueue_msg(can_struct* structure, uint32_t (* pack_function)(can_struct*, uint8_t*, uint8_t*, uint8_t*), queue_type& CAN_msg_out_queue) {
+        CAN_message_t can_msg;
+        can_msg.id = pack_function(structure, can_msg.buf, &can_msg.len, (uint8_t*) &can_msg.flags.extended);
+        uint8_t buf[sizeof(CAN_message_t)] = {};
+        memmove(buf, &can_msg, sizeof(CAN_message_t));
+        CAN_msg_out_queue.push_back(buf, sizeof(CAN_message_t));
+    }
+}
+
 #endif /* CANINTERFACE */
