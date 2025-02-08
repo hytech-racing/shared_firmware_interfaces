@@ -1,1 +1,5 @@
 .pio/
+**.DS_Store
+.cache/
+.vscode/*
+.pio
