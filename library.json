@@ -6,7 +6,7 @@
     "platforms": "*",
     "dependencies":
     {
-      "shared_firmware_types": "https://github.com/hytech-racing/shared_firmware_types.git#f976ebd",
+      "shared_firmware_types": "*",
       "FlexCAN_T4": "https://github.com/tonton81/FlexCAN_T4",
       "Embedded Template Library": "https://github.com/ETLCPP/etl.git"
     }
