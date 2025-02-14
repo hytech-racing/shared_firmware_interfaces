@@ -6,14 +6,14 @@
 #include "pb_common.h"
 #include "circular_buffer.h"
 #include <QNEthernet.h>
+#include "etl/optional.h"
 
 #include <functional>
 //#include <SysClock.h>
-#include <optional>
 
 
 template <size_t buffer_size, typename pb_msg_type>
-std::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::EthernetUDP *socket, const pb_msgdesc_t *desc_pointer)
+etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::EthernetUDP *socket, const pb_msgdesc_t *desc_pointer)
 {
     int packet_size = socket->parsePacket();
     if (packet_size > 0)
@@ -29,7 +29,7 @@ std::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::Et
             return msg;
         }
     }
-    return std::nullopt;
+    return etl::nullopt;
 }
 
 template <typename pb_struct, size_t buffer_size>
