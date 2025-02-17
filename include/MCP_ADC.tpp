@@ -1,8 +1,9 @@
 #include "MCP_ADC.h"
 #include <SPI.h>
+#include <array>
 
 template <int MCP_ADC_NUM_CHANNELS>
-MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const scales[MCP_ADC_NUM_CHANNELS], const offsets[MCP_ADC_NUM_CHANNELS])
+MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const float scales[MCP_ADC_NUM_CHANNELS], const float offsets[MCP_ADC_NUM_CHANNELS])
 : _spiPinCS(spiPinCS)
 , _spiPinSDI(spiPinSDI)
 , _spiPinSDO(spiPinSDO)
@@ -35,11 +36,11 @@ void MCP_ADC<MCP_ADC_NUM_CHANNELS>::sample()
     byte command, b0, b1, b2;
 
     // initialize SPI bus. REQUIRED: call SPI.begin() before this
-    SPI.beginTransaction(SPISettings(spiSpeed_, MSBFIRST, SPI_MODE0));
+    SPI.beginTransaction(SPISettings(_spiSpeed, MSBFIRST, SPI_MODE0));
 
     for (int channelIndex = 0; channelIndex < MCP_ADC_NUM_CHANNELS; channelIndex++)
     {
-        digitalWrite(spiPinCS_, LOW);
+        digitalWrite(_spiPinCS, LOW);
         command = ((0x01 << 7) |                    // start bit
                    (0x01 << 6) |                    // single or differential
                    ((channelIndex & 0x07) << 3));   // channel number
