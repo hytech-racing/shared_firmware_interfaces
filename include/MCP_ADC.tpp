@@ -2,32 +2,20 @@
 #include <SPI.h>
 
 template <int MCP_ADC_NUM_CHANNELS>
-MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed)
-: spiPinCS_(spiPinCS)
-, spiPinSDI_(spiPinSDI)
-, spiPinSDO_(spiPinSDO)
-, spiPinCLK_(spiPinCLK)
-, spiSpeed_(spiSpeed)
+MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const scales[MCP_ADC_NUM_CHANNELS], const offsets[MCP_ADC_NUM_CHANNELS])
+: _spiPinCS(spiPinCS)
+, _spiPinSDI(spiPinSDI)
+, _spiPinSDO(spiPinSDO)
+, _spiPinCLK(spiPinCLK)
+, _spiSpeed(spiSpeed)
 {
     for (int i = 0; i < MCP_ADC_NUM_CHANNELS; i++)
     {
-        MCP_ADC<MCP_ADC_NUM_CHANNELS>::channels_[i] = AnalogChannel();
+        MCP_ADC<MCP_ADC_NUM_CHANNELS>::_channels[i] = AnalogChannel();
+        setChannelScaleAndOffset(i, scales[i], offsets[i]);
     }
-}
-
-template <int MCP_ADC_NUM_CHANNELS>
-MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS_, const int spiSpeed_)
-: MCP_ADC<MCP_ADC_NUM_CHANNELS>(spiPinCS_, MCP_ADC_DEFAULT_SPI_SDI, MCP_ADC_DEFAULT_SPI_SDO, MCP_ADC_DEFAULT_SPI_CLK, spiSpeed_) {}
-
-template <int MCP_ADC_NUM_CHANNELS>
-MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS__)
-: MCP_ADC<MCP_ADC_NUM_CHANNELS>(spiPinCS__, MCP_ADC_DEFAULT_SPI_SPEED) {}
-
-template <int MCP_ADC_NUM_CHANNELS>
-void MCP_ADC<MCP_ADC_NUM_CHANNELS>::init()
-{
-    pinMode(spiPinCS_, OUTPUT);
-    digitalWrite(spiPinCS_, HIGH);
+    pinMode(_spiPinCS, OUTPUT);
+    digitalWrite(_spiPinCS, HIGH);
 }
 
 template <int MCP_ADC_NUM_CHANNELS>
@@ -61,8 +49,8 @@ void MCP_ADC<MCP_ADC_NUM_CHANNELS>::sample()
 
         // uint16_t value = SPI.transfer16(command | channelIndex << 11);
         uint16_t value = (b0 & 0x01) << 11 | (b1 & 0xFF) << 3 | (b2 & 0xE0) >> 5;
-        MCP_ADC<MCP_ADC_NUM_CHANNELS>::channels_[channelIndex].lastSample = (value & 0x0FFF);
-        digitalWrite(spiPinCS_, HIGH);
+        MCP_ADC<MCP_ADC_NUM_CHANNELS>::_channels[channelIndex].lastSample = (value & 0x0FFF);
+        digitalWrite(_spiPinCS, HIGH);
         delayMicroseconds(1); // MCP_ADC Tcsh = 500ns
     }
     

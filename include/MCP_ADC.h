@@ -12,27 +12,22 @@ const int MCP_ADC_DEFAULT_SPI_SPEED = 2000000;
 /**
  * The MCP_ADC is a concrete subclass of the AnalogMultiSensor parent class. This allows
  * for SPI communication with the MCP_ADC, which can be a 4-channel or 8-channel sensor.
+ * IMPORTANT - must call SPI.begin() once and only once before instantiating any MCP_ADC object!!
  */
 template <int MCP_ADC_NUM_CHANNELS>
 class MCP_ADC : public AnalogMultiSensor<MCP_ADC_NUM_CHANNELS>
 {
 private:
-    const int spiPinCS_;
-    const int spiPinSDI_;
-    const int spiPinSDO_;
-    const int spiPinCLK_;
-    const int spiSpeed_;
+    const int _spiPinCS;
+    const int _spiPinSDI;
+    const int _spiPinSDO;
+    const int _spiPinCLK;
+    const int _spiSpeed;
 public:
     /* Constructors */
-    MCP_ADC(int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed);
-    MCP_ADC(int spiPinCS, const int spiSpeed);
-    MCP_ADC(int spiPinCS);
+    MCP_ADC(int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const scales[MCP_ADC_NUM_CHANNELS], const offsets[MCP_ADC_NUM_CHANNELS]);
 
     /* Functions */
-    /**
-     * Performs necessary initialization functions to configure the Teensy's output pins.
-     */
-    void init();
 
     /**
      * Calls sample() and convert(). After calling tick(), this MCP_ADC's data can be accessed using the get() command.
