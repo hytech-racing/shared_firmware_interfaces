@@ -25,7 +25,7 @@ private:
     const int _spiSpeed;
 public:
     /* Constructors */
-    MCP_ADC(int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const scales[MCP_ADC_NUM_CHANNELS], const offsets[MCP_ADC_NUM_CHANNELS]);
+    MCP_ADC(int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const float scales[MCP_ADC_NUM_CHANNELS], const float offsets[MCP_ADC_NUM_CHANNELS]);
 
     /* Functions */
 
