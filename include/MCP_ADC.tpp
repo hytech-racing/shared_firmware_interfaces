@@ -13,7 +13,7 @@ MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS, const int spiPinSDI, 
     for (int i = 0; i < MCP_ADC_NUM_CHANNELS; i++)
     {
         MCP_ADC<MCP_ADC_NUM_CHANNELS>::_channels[i] = AnalogChannel();
-        setChannelScaleAndOffset(i, scales[i], offsets[i]);
+        this->setChannelScaleAndOffset(i, scales[i], offsets[i]);
     }
     pinMode(_spiPinCS, OUTPUT);
     digitalWrite(_spiPinCS, HIGH);
