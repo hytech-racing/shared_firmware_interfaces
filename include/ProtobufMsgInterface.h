@@ -8,10 +8,6 @@
 #include <QNEthernet.h>
 #include "etl/optional.h"
 
-#include <functional>
-//#include <SysClock.h>
-
-
 template <size_t buffer_size, typename pb_msg_type>
 etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::EthernetUDP *socket, const pb_msgdesc_t *desc_pointer)
 {
