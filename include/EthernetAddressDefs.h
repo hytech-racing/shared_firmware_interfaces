@@ -2,6 +2,7 @@
 #define ETHERNET_ADDRESS_DEFS_H
 
 #include "QNEthernet.h"
+#include "etl/singleton.h"
 
 /**
  * Definitions of ethernet IPs according to the BookStack page ("HT09 Ethernet IPs and Ports").
@@ -25,5 +26,7 @@ struct EthernetIPDefs_s {
     const uint16_t ACUAllData_port = 7766,
     const uint16_t DBData_port = 8888
 };
+
+using EthernetIPDefsInstance = etl::singleton<EthernetIPDefs_s>;
 
 #endif /* ETHERNET_ADDRESS_DEFS_H */
