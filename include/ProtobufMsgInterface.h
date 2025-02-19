@@ -1,16 +1,9 @@
 #ifndef PROTOBUFMSGINTERFACE
 #define PROTOBUFMSGINTERFACE
 
-#include "pb_encode.h"
-#include "pb_decode.h"
-#include "pb_common.h"
+#include "Nanopb"
 #include "circular_buffer.h"
-#include <QNEthernet.h>
 #include "etl/optional.h"
-
-#include <functional>
-//#include <SysClock.h>
-
 
 template <size_t buffer_size, typename pb_msg_type>
 etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::EthernetUDP *socket, const pb_msgdesc_t *desc_pointer)
