@@ -63,6 +63,25 @@ template <int N>
 class AnalogMultiSensor
 {
 private:
+
+/**
+     * Performs unit conversions on all channels.
+     * @post The data field will be updated with the new conversions of each channel.
+     */
+    void convert()
+    {
+        for (int i = 0; i < N; i++)
+        {
+            data.conversions[i] = _channels[i].convert();
+        }
+    }
+
+    /**
+     * Commands the underlying device to sample all channels and internall store the results.
+     * @post The lastSample field of each AnalogChannel in channels_ must contain the new value.
+     */
+    void sample();
+
 protected:
     AnalogChannel _channels[N];
 public:
@@ -123,24 +142,6 @@ public:
         setChannelScale(channel, scale);
         setChannelOffset(channel, offset);
     }
-
-    /**
-     * Performs unit conversions on all channels.
-     * @post The data field will be updated with the new conversions of each channel.
-     */
-    void convert()
-    {
-        for (int i = 0; i < N; i++)
-        {
-            data.conversions[i] = _channels[i].convert();
-        }
-    }
-
-    /**
-     * Commands the underlying device to sample all channels and internall store the results.
-     * @post The lastSample field of each AnalogChannel in channels_ must contain the new value.
-     */
-    void sample();
 
 };
 

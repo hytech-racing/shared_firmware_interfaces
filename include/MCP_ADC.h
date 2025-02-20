@@ -23,6 +23,13 @@ private:
     const int _spiPinSDO;
     const int _spiPinCLK;
     const int _spiSpeed;
+
+    /**
+     * Samples the MCP_ADC over SPI. Samples all eight channels and, in accordance with the AnalogMultiSensor's function
+     * contract, stores the raw sampled values into each AnalogChannel's lastSample instance variable.
+     */
+    void sample();
+    
 public:
     /* Constructors */
     MCP_ADC(int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const float scales[MCP_ADC_NUM_CHANNELS], const float offsets[MCP_ADC_NUM_CHANNELS]);
@@ -34,11 +41,6 @@ public:
      */
     void tick();
 
-    /**
-     * Samples the MCP_ADC over SPI. Samples all eight channels and, in accordance with the AnalogMultiSensor's function
-     * contract, stores the raw sampled values into each AnalogChannel's lastSample instance variable.
-     */
-    void sample();
 };
 
 #include "MCP_ADC.tpp"
