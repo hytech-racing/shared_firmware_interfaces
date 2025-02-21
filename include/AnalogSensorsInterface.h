@@ -64,7 +64,7 @@ class AnalogMultiSensor
 {
 private:
 
-/**
+    /**
      * Performs unit conversions on all channels.
      * @post The data field will be updated with the new conversions of each channel.
      */
@@ -142,6 +142,7 @@ public:
         setChannelScale(channel, scale);
         setChannelOffset(channel, offset);
     }
+
 
 };
 
