@@ -1,6 +1,5 @@
 #include "types.h"
 
-namespace vn {
 namespace protocol {
 namespace uart {
 
@@ -52,6 +51,5 @@ InsGroup operator|(InsGroup lhs, InsGroup rhs)
 	return InsGroup(int(lhs) | int(rhs));
 }
 
-}
 }
 }

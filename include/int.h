@@ -5,8 +5,6 @@
 /// Provides definitions for standard integer types, typically simply including
 /// the standard stdint.h file but self-defining these types if the current
 /// system doesn't have this file.
-#ifndef _VN_INT_H_
-#define _VN_INT_H_
 
 #if defined(_MSC_VER) && _MSC_VER <= 1500
 	
@@ -23,6 +21,4 @@
 
 #else
 	#include <stdint.h>
-#endif
-
 #endif
