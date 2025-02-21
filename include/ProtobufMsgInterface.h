@@ -1,7 +1,10 @@
 #ifndef PROTOBUFMSGINTERFACE
 #define PROTOBUFMSGINTERFACE
 
-#include "Nanopb"
+#include "pb_encode.h"
+#include "pb_decode.h"
+#include "pb_common.h"
+
 #include "circular_buffer.h"
 #include "etl/optional.h"
 
