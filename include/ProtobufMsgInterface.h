@@ -30,7 +30,7 @@ etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::Et
     return etl::nullopt;
 }
 
-template <typename pb_struct, size_t buffer_size>
+template <size_t buffer_size, typename pb_struct>
 bool handle_ethernet_socket_send_pb(IPAddress addr, uint16_t port, qindesign::network::EthernetUDP *socket, const pb_struct &msg, const pb_msgdesc_t *msg_desc)
 {
     socket->beginPacket(addr, port);
