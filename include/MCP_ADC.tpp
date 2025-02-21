@@ -22,12 +22,12 @@ MCP_ADC<MCP_ADC_NUM_CHANNELS>::MCP_ADC(const int spiPinCS, const int spiPinSDI, 
 template <int MCP_ADC_NUM_CHANNELS>
 void MCP_ADC<MCP_ADC_NUM_CHANNELS>::tick()
 {
-    MCP_ADC<MCP_ADC_NUM_CHANNELS>::sample();
-    MCP_ADC<MCP_ADC_NUM_CHANNELS>::convert();
+    _sample();
+    this->_convert();
 }
 
 template <int MCP_ADC_NUM_CHANNELS>
-void MCP_ADC<MCP_ADC_NUM_CHANNELS>::sample()
+void MCP_ADC<MCP_ADC_NUM_CHANNELS>::_sample()
 {
     // uint16_t command = (
     //     (0b1 << 15) |    // start bit

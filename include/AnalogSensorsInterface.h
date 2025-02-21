@@ -1,7 +1,6 @@
 #ifndef ANALOGSENSORSINTERFACE
 #define ANALOGSENSORSINTERFACE
 
-#include <tuple>
 #include <algorithm>
 #include "SharedFirmwareTypes.h"
 
@@ -62,13 +61,13 @@ public:
 template <int N>
 class AnalogMultiSensor
 {
-private:
+protected:
 
     /**
      * Performs unit conversions on all channels.
      * @post The data field will be updated with the new conversions of each channel.
      */
-    void convert()
+    void _convert()
     {
         for (int i = 0; i < N; i++)
         {
@@ -80,7 +79,7 @@ private:
      * Commands the underlying device to sample all channels and internall store the results.
      * @post The lastSample field of each AnalogChannel in channels_ must contain the new value.
      */
-    void sample();
+    virtual void _sample();
 
 protected:
     AnalogChannel _channels[N];
@@ -92,7 +91,7 @@ public:
     /**
      * The tick() function in each subclass should call sample() and then convert() to update the data field.
      */
-    void tick(unsigned long curr_millis);
+    virtual void tick();
 
     /**
      * Used by systems to retrieve the data field.
