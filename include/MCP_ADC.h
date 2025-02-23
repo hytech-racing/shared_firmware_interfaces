@@ -1,6 +1,7 @@
 #ifndef __MCP_ADC_H__
 #define __MCP_ADC_H__
 
+#include "SPI.h"
 #include "AnalogSensorsInterface.h"
 
 // Definitions
@@ -28,7 +29,7 @@ private:
      * Samples the MCP_ADC over SPI. Samples all eight channels and, in accordance with the AnalogMultiSensor's function
      * contract, stores the raw sampled values into each AnalogChannel's lastSample instance variable.
      */
-    void sample();
+    void _sample() override;
     
 public:
     /* Constructors */
@@ -39,7 +40,7 @@ public:
     /**
      * Calls sample() and convert(). After calling tick(), this MCP_ADC's data can be accessed using the get() command.
      */
-    void tick();
+    void tick() override;
 
 };
 
