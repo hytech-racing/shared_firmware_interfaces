@@ -70,6 +70,7 @@ namespace CAN_util
     template <typename can_struct, typename queue_type>
     void enqueue_msg(can_struct* structure, uint32_t (* pack_function)(can_struct*, uint8_t*, uint8_t*, uint8_t*), queue_type& CAN_msg_out_queue, uint32_t id) {
         CAN_message_t can_msg;
+        pack_function(structure, can_msg.buf, &can_msg.len, (uint8_t*) &can_msg.flags.extended)
         can_msg.id = id;
         uint8_t buf[sizeof(CAN_message_t)] = {};
         memmove(buf, &can_msg, sizeof(CAN_message_t));
