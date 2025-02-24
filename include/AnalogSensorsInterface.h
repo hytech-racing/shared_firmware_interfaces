@@ -1,7 +1,6 @@
 #ifndef ANALOGSENSORSINTERFACE
 #define ANALOGSENSORSINTERFACE
 
-#include <tuple>
 #include <algorithm>
 #include "SharedFirmwareTypes.h"
 
@@ -23,14 +22,14 @@ public:
     int lastSample;
 
     /* Constructors */
-    AnalogChannel(float scale_, float offset_, bool clamp_, float clampLow_, float clampHigh_)
-    : scale(scale_),
-      offset(offset_),
-      clamp(clamp_),
-      clampLow(clampLow_),
-      clampHigh(clampHigh_) {}
-    AnalogChannel(float scale_, float offset_)
-    : AnalogChannel(scale_, offset_, false, __FLT_MIN__, __FLT_MAX__) {}
+    AnalogChannel(float scale, float offset, bool clamp, float clampLow, float clampHigh)
+    : scale(scale),
+      offset(offset),
+      clamp(clamp),
+      clampLow(clampLow),
+      clampHigh(clampHigh) {}
+    AnalogChannel(float scale, float offset)
+    : AnalogChannel(scale, offset, false, __FLT_MIN__, __FLT_MAX__) {}
     AnalogChannel()
     : AnalogChannel(1.0, 0.0, false, __FLT_MIN__, __FLT_MAX__) {}
     
@@ -62,9 +61,28 @@ public:
 template <int N>
 class AnalogMultiSensor
 {
-private:
 protected:
-    AnalogChannel channels_[N];
+
+    /**
+     * Performs unit conversions on all channels.
+     * @post The data field will be updated with the new conversions of each channel.
+     */
+    void _convert()
+    {
+        for (int i = 0; i < N; i++)
+        {
+            data.conversions[i] = _channels[i].convert();
+        }
+    }
+
+    /**
+     * Commands the underlying device to sample all channels and internall store the results.
+     * @post The lastSample field of each AnalogChannel in channels_ must contain the new value.
+     */
+    virtual void _sample();
+
+protected:
+    AnalogChannel _channels[N];
 public:
     AnalogConversionPacket_s<N> data;
 
@@ -73,7 +91,7 @@ public:
     /**
      * The tick() function in each subclass should call sample() and then convert() to update the data field.
      */
-    void tick(unsigned long curr_millis);
+    virtual void tick();
 
     /**
      * Used by systems to retrieve the data field.
@@ -89,7 +107,7 @@ public:
     void setChannelScale(int channel, float scale)
     {
         if (channel < N)
-            channels_[channel].scale = scale;
+            _channels[channel].scale = scale;
     }
 
     /**
@@ -98,7 +116,7 @@ public:
     void setChannelOffset(int channel, float offset)
     {
         if (channel < N)
-            channels_[channel].offset = offset;
+            _channels[channel].offset = offset;
     }
 
     /**
@@ -109,9 +127,9 @@ public:
     void setChannelClamp(int channel, float clampLow, float clampHigh)
     {
         if (channel < N) {
-            channels_[channel].clampLow = clampLow;
-            channels_[channel].clampHigh = clampHigh;
-            channels_[channel].clamp = true;
+            _channels[channel].clampLow = clampLow;
+            _channels[channel].clampHigh = clampHigh;
+            _channels[channel].clamp = true;
         }
     }
 
@@ -124,23 +142,6 @@ public:
         setChannelOffset(channel, offset);
     }
 
-    /**
-     * Performs unit conversions on all channels.
-     * @post The data field will be updated with the new conversions of each channel.
-     */
-    void convert()
-    {
-        for (int i = 0; i < N; i++)
-        {
-            data.conversions[i] = channels_[i].convert();
-        }
-    }
-
-    /**
-     * Commands the underlying device to sample all channels and internall store the results.
-     * @post The lastSample field of each AnalogChannel in channels_ must contain the new value.
-     */
-    void sample();
 
 };
 

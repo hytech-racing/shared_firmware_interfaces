@@ -2,6 +2,8 @@
     "files.associations": {
         "*.tpp": "c",
         "*.tcc": "c",
-        "ostream": "c"
+        "ostream": "c",
+        "mcp_adc.h": "c",
+        "analogsensorsinterface.h": "c"
     }
 }
