@@ -21,7 +21,7 @@ struct EthernetIPDefs_s {
     const IPAddress default_gateway{192, 168, 1, 1};
     const IPAddress car_subnet{255, 255, 255, 0};
     const uint16_t VCFData_port = 4444;
-    const uint16_t VCRData_port = 5555;
+    const uint16_t VCRData_port = 9999;
     const uint16_t ACUCoreData_port = 7777;
     const uint16_t ACUAllData_port = 7766;
     const uint16_t DBData_port = 8888;
