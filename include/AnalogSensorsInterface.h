@@ -40,7 +40,7 @@ public:
      */
     AnalogConversion_s convert()
     {
-        float conversion = (lastSample + offset) * scale;
+        float conversion = (lastSample* scale) + offset;
         float clampedConversion = std::min(std::max(conversion, clampLow), clampHigh);
         AnalogSensorStatus_e returnStatus = AnalogSensorStatus_e::ANALOG_SENSOR_GOOD;
         if (clamp && (conversion > clampHigh || conversion < clampLow))
