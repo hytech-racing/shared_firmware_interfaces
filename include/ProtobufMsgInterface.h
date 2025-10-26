@@ -47,7 +47,7 @@ bool handle_ethernet_socket_send_pb(IPAddress addr, uint16_t port, qindesign::ne
     const size_t ETH_MARGIN  = 64;
     
     // check if ethernet tx ring is full
-    if (Ethernet.txAvailable() < len + ETH_MARGIN) return false; 
+    // if (Ethernet.txAvailable() < len + ETH_MARGIN) return false; 
     
     if(!socket->beginPacket(addr, port)) return false;
 
