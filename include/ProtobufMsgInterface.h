@@ -33,20 +33,34 @@ etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::Et
 template <size_t buffer_size, typename pb_struct>
 bool handle_ethernet_socket_send_pb(IPAddress addr, uint16_t port, qindesign::network::EthernetUDP *socket, const pb_struct &msg, const pb_msgdesc_t *msg_desc)
 {
-    socket->beginPacket(addr, port);
-    uint8_t buffer[buffer_size];
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
+    static uint8_t txBufA[buffer_size];
+    static uint8_t txBufB[buffer_size];
+    static bool useA = true;
+    uint8_t *buf = useA ? txBufA : txBufB;
+    useA = !useA;
+
+    pb_ostream_t stream = pb_ostream_from_buffer(buf, buffer_size);
     if (!pb_encode(&stream, msg_desc, &msg))
     {
         // You can handle error more explicitly by looking at stream.errmsg
         return false;
     }
-    auto message_length = stream.bytes_written;
-    socket->write(buffer, message_length);
-    socket->endPacket();
-    return true;
+
+    const size_t len = stream.bytes_written;
+    const size_t ETH_MARGIN  = 64;
+    
+    // check if ethernet tx ring is full
+    if (qindesign::network::Ethernet.txAvailable() < len + ETH_MARGIN) return false; 
+    
+    if(!socket->beginPacket(addr, port)) return false;
+
+    size_t written = socket->write(buf, len);
+    if (written != len) {
+        socket->endPacket();
+        return false;
+    }
+    bool ok = socket->endPacket();
+    return ok;
 }
-
-
 
 #endif
