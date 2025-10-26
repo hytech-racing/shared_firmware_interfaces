@@ -33,11 +33,8 @@ etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::Et
 template <size_t buffer_size, typename pb_struct>
 bool handle_ethernet_socket_send_pb(IPAddress addr, uint16_t port, qindesign::network::EthernetUDP *socket, const pb_struct &msg, const pb_msgdesc_t *msg_desc)
 {
-    static uint8_t txBufA[buffer_size];
-    static uint8_t txBufB[buffer_size];
-    static bool useA = true;
-    uint8_t *buf = useA ? txBufA : txBufB;
-    useA = !useA;
+    using namespace qindesign::network;
+    static uint8_t buf[buffer_size];
 
     pb_ostream_t stream = pb_ostream_from_buffer(buf, buffer_size);
     if (!pb_encode(&stream, msg_desc, &msg))
@@ -50,7 +47,7 @@ bool handle_ethernet_socket_send_pb(IPAddress addr, uint16_t port, qindesign::ne
     const size_t ETH_MARGIN  = 64;
     
     // check if ethernet tx ring is full
-    if (qindesign::network::Ethernet.txAvailable() < len + ETH_MARGIN) return false; 
+    if (Ethernet.txAvailable() < len + ETH_MARGIN) return false; 
     
     if(!socket->beginPacket(addr, port)) return false;
 
