@@ -57,7 +57,7 @@ enum CANInterfaceType_e {
  * @param recv_switch_func the receive function that gets called and is given the interfaces ref, CAN message struct and millis timestamp. expected to contain switch statement.
  */
 template <typename BufferType, typename InterfaceContainer>
-void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis, std::string interface_id)> recv_switch_func, CANInterfaceType_e interface_type)
+void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis, CANInterfaceType_e interface_type)> recv_switch_func, CANInterfaceType_e interface_type)
 {
     while (rx_buffer.available())
     {
@@ -65,7 +65,7 @@ void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, 
         uint8_t buf[sizeof(CAN_message_t)];
         rx_buffer.pop_front(buf, sizeof(CAN_message_t));
         memmove(&recvd_msg, buf, sizeof(recvd_msg));
-        recv_switch_func(interfaces, recvd_msg, curr_millis);
+        recv_switch_func(interfaces, recvd_msg, curr_millis, interface_type);
     }
 }
 
