@@ -40,11 +40,11 @@ void handle_CAN_setup(CAN_DEVICE& CAN_dev, uint32_t baudrate, void (*on_recv_fun
  * so that they can be referenced in generic methods 
  * such as process_ring_buffer
  */
-struct CANInterfaceType_e {
+enum CANInterfaceType_e {
     TELEM, 
     AUX, 
     INVERTER
-}
+};
 
 /**
  * @brief handles reading from a receive buffer updating the current message frame from a specific receive buffer. pass through messages to the callback specified using the delegate function
