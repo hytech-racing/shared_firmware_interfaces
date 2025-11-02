@@ -44,7 +44,7 @@ void handle_CAN_setup(CAN_DEVICE& CAN_dev, uint32_t baudrate, void (*on_recv_fun
  * @param recv_switch_func the receive function that gets called and is given the interfaces ref, CAN message struct and millis timestamp. expected to contain switch statement.
  */
 template <typename BufferType, typename InterfaceContainer>
-void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis)> recv_switch_func)
+void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis, std::string interface_id)> recv_switch_func, std::string interface_id)
 {
     while (rx_buffer.available())
     {
