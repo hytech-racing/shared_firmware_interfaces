@@ -16,9 +16,9 @@ etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::Et
     int packet_size = socket->parsePacket();
     if (packet_size > 0)
         {
-        uint8_t buffer[buffer_size];
-        size_t read_bytes = socket->read(buffer, sizeof(buffer));
-        socket->read(buffer, buffer_size); //remove?
+        static uint8_t buffer[buffer_size];
+        size_t read_bytes = socket->read(buffer, buffer_size);
+        //socket->read(buffer, buffer_size); //remove?
 
         pb_istream_t stream = pb_istream_from_buffer(buffer, packet_size);
         pb_msg_type msg = {};
@@ -33,7 +33,6 @@ etl::optional<pb_msg_type> handle_ethernet_socket_receive(qindesign::network::Et
 template <size_t buffer_size, typename pb_struct>
 bool handle_ethernet_socket_send_pb(IPAddress addr, uint16_t port, qindesign::network::EthernetUDP *socket, const pb_struct &msg, const pb_msgdesc_t *msg_desc)
 {
-    using namespace qindesign::network;
     static uint8_t buf[buffer_size];
 
     pb_ostream_t stream = pb_ostream_from_buffer(buf, buffer_size);
@@ -44,12 +43,9 @@ bool handle_ethernet_socket_send_pb(IPAddress addr, uint16_t port, qindesign::ne
     }
 
     const size_t len = stream.bytes_written;
-    const size_t ETH_MARGIN  = 64;
-    
-    // check if ethernet tx ring is full
-    // if (Ethernet.txAvailable() < len + ETH_MARGIN) return false; 
     
     if(!socket->beginPacket(addr, port)) return false;
+    if(socket->availableForWrite() < len) return false;
 
     size_t written = socket->write(buf, len);
     if (written != len) {
