@@ -4,6 +4,11 @@
         "*.tcc": "c",
         "ostream": "c",
         "mcp_adc.h": "c",
-        "analogsensorsinterface.h": "c"
+        "analogsensorsinterface.h": "c",
+        "istream": "cpp",
+        "__split_buffer": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "deque": "cpp"
     }
 }
