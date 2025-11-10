@@ -34,19 +34,6 @@ void handle_CAN_setup(CAN_DEVICE& CAN_dev, uint32_t baudrate, void (*on_recv_fun
 */
 
 /**
- * @enum CanInterfaceType_e  
- * 
- * Provides the different can interfaces we use 
- * so that they can be referenced in generic methods 
- * such as process_ring_buffer
- */
-enum CANInterfaceType_e {
-    TELEM, 
-    AUX, 
-    INVERTER
-};
-
-/**
  * @brief handles reading from a receive buffer updating the current message frame from a specific receive buffer. pass through messages to the callback specified using the delegate function
  * 
  * @tparam BufferType CAN message receive buffer type (::pop_front(buf, len))
@@ -57,7 +44,7 @@ enum CANInterfaceType_e {
  * @param recv_switch_func the receive function that gets called and is given the interfaces ref, CAN message struct and millis timestamp. expected to contain switch statement.
  */
 template <typename BufferType, typename InterfaceContainer>
-void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis, CANInterfaceType_e interface_type)> recv_switch_func, CANInterfaceType_e interface_type)
+void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, unsigned long curr_millis, etl::delegate<void(InterfaceContainer& interfaces, const CAN_message_t& CAN_msg, unsigned long curr_millis)> recv_switch_func)
 {
     while (rx_buffer.available())
     {
@@ -65,7 +52,7 @@ void process_ring_buffer(BufferType &rx_buffer, InterfaceContainer &interfaces, 
         uint8_t buf[sizeof(CAN_message_t)];
         rx_buffer.pop_front(buf, sizeof(CAN_message_t));
         memmove(&recvd_msg, buf, sizeof(recvd_msg));
-        recv_switch_func(interfaces, recvd_msg, curr_millis, interface_type);
+        recv_switch_func(interfaces, recvd_msg, curr_millis);
     }
 }
 
@@ -89,7 +76,6 @@ namespace CAN_util
         memmove(buf, &can_msg, sizeof(CAN_message_t));
         CAN_msg_out_queue.push_back(buf, sizeof(CAN_message_t));
     }
-    
 }
 
 #endif /* CANINTERFACE */
