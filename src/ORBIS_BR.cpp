@@ -131,8 +131,8 @@ void OrbisBR::timedSample(uint32_t intervalMs)
 
 SteeringEncoderConversion_s OrbisBR::convert() // convert raw binary code, to a this struct. Readable for the car. 
 {
-    _lastConversion_.raw = _position_data;
-    _lastConversion_.angle = (_position_data * ORBIS_BR_SCALE) + _offset;
+    _lastConversion.raw = _position_data;
+    _lastConversion.angle = (_position_data * ORBIS_BR_SCALE) + _offset;
 
     // Apply modulo
     while (_lastConversion.angle < -180.0f)
