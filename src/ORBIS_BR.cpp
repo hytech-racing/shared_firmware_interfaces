@@ -92,10 +92,10 @@ void OrbisBR::setEncoderOffset(uint16_t offsetCounts)
     _serial->write(0xAB);
 
     _serial->write(0x5A); // offset command
-    _serial->write(0x00); // offset position
-    _serial->write(0x00);
-    _serial->write(0x00); 
-    _serial->write(0x00);     
+    _serial->write(static_cast<int>(0x00)); // offset position
+    _serial->write(static_cast<int>(0x00));
+    _serial->write(static_cast<int>(0x00)); 
+    _serial->write(static_cast<int>(0x00));     
 }
 
 // Save Configuration in Non-Volatile Memory Function
