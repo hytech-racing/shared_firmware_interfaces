@@ -33,7 +33,7 @@ void OrbisBR::init() // all initialization (calibration and configuration)
     _serial->write(0x54);       // 'T' command
     _serial->write(0x01);       // Auto-start enabled after power-on
     _serial->write(0x33);       // Command '3' = short position response
-    _serial->write(0x00);       // Period high byte (0x00)
+    _serial->write(static_cast<int>(0x00));       // Period high byte (0x00)
     _serial->write(0x3E8);      // Period low byte (0x3E8 = 1000 µs)
 
 
