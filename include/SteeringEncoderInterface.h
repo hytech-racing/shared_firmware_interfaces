@@ -23,7 +23,7 @@ struct EncoderErrorFlags_s
     bool noData                   = false;  // No data received
 };
 
-struct SteeringEncoderConversion_s  // this whats sent from sensor interface to vcf data??
+struct SteeringEncoderConversion_s // what's seen in foxglove?
 {
     float angle = 0.0f;
     int raw = 0;
@@ -41,9 +41,6 @@ public:
     /// @brief Calculate steering angle and whether result is in sensor's defined bounds. DOES NOT SAMPLE.
     /// @return Calculated steering angle in degrees, upperSteeringStatus_s
     virtual SteeringEncoderConversion_s convert() = 0;
-    /// @brief Set the upper steering sensor's offset. 0 degrees should be centered.
-    /// @param newOffset 
-    virtual void setOffset(float newOffset) = 0;
 };
 
 

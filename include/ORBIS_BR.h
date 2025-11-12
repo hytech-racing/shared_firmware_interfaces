@@ -15,9 +15,7 @@
 //  Configuration parameters reset 'r' (0x72)        0
 
 // Definitions
-const bool     ORBIS_BR_FLIP_DIRECTION                    = true;
 const int      ORBIS_BR_DEFAULT_BAUD_RATE                 = 115200;
-const float    ORBIS_BR_SCALE                             = 0.0219726562; // 360 degrees per 14 bits (14 bit resolution)
 
 // Error Definitions
 const uint16_t ORBIS_BR_BITMASK_GENERAL_WARNING           = (0b1 << 0);   // error if low, position valid, some operating conditions are close to limits : 0b00000001
@@ -38,7 +36,6 @@ public:
     void init() override;
     void sample() override;
     SteeringEncoderConversion_s convert() override;
-    void setOffset(float newOffset) override;
     void timedSample(uint32_t intervalMs = 500);
 
 private:
@@ -46,10 +43,15 @@ private:
     HardwareSerial* _serial;
     int _serialSpeed;
     int _position_data;
-    float _offset;
     SteeringEncoderConversion_s _lastConversion;
     unsigned long _lastSampleTime = 0;
 
+    bool _isCalibrated = false;
+    bool _isOffsetSet = false;
+
+    bool performSelfCalibration();
+    void setEncoderOffset(uint16_t offsetCounts);
+    void saveConfiguration();
     void decodeErrors(uint8_t general, uint8_t detailed);
 };
 

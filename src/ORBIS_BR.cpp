@@ -1,10 +1,9 @@
 #include "ORBIS_BR.h"
 
-OrbisBR::OrbisBR(HardwareSerial* serial, int serialSpeed = ORBIS_BR_DEFAULT_BAUD_RATE)
+OrbisBR::OrbisBR(HardwareSerial* serial, int serialSpeed)
 : _serial(serial)
 , _serialSpeed(serialSpeed)
 , _position_data(0)
-, _offset(0.0f)
 {
    _lastConversion.status = SteeringEncoderStatus_e::STEERING_ENCODER_ERROR;
 }
@@ -13,32 +12,21 @@ void OrbisBR::init() // all initialization (calibration and configuration)
 {
     _serial->begin(_serialSpeed);
 
-    // Unlock encoder sequence
-    _serial->write(0xCD); 
-    _serial->write(0xEF);
-    _serial->write(0x89);
-    _serial->write(0xAB); // may need delay(1)
-
-    _serial->write(0x41);             // self-calibration start
-    _serial->write(0x69); delay(5);   // self-calibration status request
-
-    SteeringEncoderConversion_s calibStatus;
-    
-    if (_serial->available() >= 2)   // Calibration checker loop
+    while (!_isCalibrated)
     {
-        uint8_t echo = _serial->read();     // echo byte
-        uint8_t status = _serial->read();   // status byte
-
-        calibStatus.errors.calibrationTimeout   = status & 0b00000010;
-        calibStatus.errors.calibrationParameter = status & 0b00000100;
-    } 
-    else
-    {
-        calibStatus.errors.noData = true;
-        // no response
+        _isCalibrated = performSelfCalibration();
+        if (!_isCalibrated)
+        {
+            delay(500);
+        }
     }
-
-    _lastConversion = calibStatus;
+    
+    if (_isCalibrated && !_isOffsetSet)
+    {
+        setEncoderOffset(0x0000);
+        _isOffsetSet = true;
+        saveConfiguration();
+    }
 
     //Continous-Response Setting ('T')
     // Using auto-start, and short position request, period = 1000 µs, should have delay(1)
@@ -52,14 +40,72 @@ void OrbisBR::init() // all initialization (calibration and configuration)
     //Continous-Response Start ('S')
     _serial->write(0x53); delay(1); 
 
-
-    //Save Config ('c')
-    _serial->write(0x63); 
-
     //encoder should auto-start on future power-ups
 }
 
 
+// Self-Calibration Function 
+bool OrbisBR::performSelfCalibration()
+{
+    // Unlock encoder sequence
+    _serial->write(0xCD); 
+    _serial->write(0xEF);
+    _serial->write(0x89);
+    _serial->write(0xAB); // may need delay(1)
+
+    _serial->write(0x41);             // self-calibration start
+    _serial->write(0x69); delay(5);   // self-calibration status request
+
+    if (_serial->available() >= 2)   // Calibration checker loop
+    {
+        uint8_t echo = _serial->read();     // echo byte
+        uint8_t status = _serial->read();   // status byte
+
+        bool timeoutError   = status & 0b00000010;
+        bool parameterError = status & 0b00000100;
+
+        if (timeoutError || parameterError)
+        {
+            _lastConversion.errors.calibrationTimeout   = timeoutError;
+            _lastConversion.errors.calibrationParameter = parameterError;
+            return false;
+        }
+        else
+        {
+            return true;
+        }    
+    } 
+    else
+    {
+        _lastConversion.errors.noData = true;
+        return false;
+        // no response
+    }
+}
+
+// Offset Function
+void OrbisBR::setEncoderOffset(uint16_t offsetCounts)
+{
+    _serial->write(0xCD);  // unlock sequence
+    _serial->write(0xEF);
+    _serial->write(0x89);
+    _serial->write(0xAB);
+
+    _serial->write(0x5A); // offset command
+    _serial->write(0x00); // offset position
+    _serial->write(0x00);
+    _serial->write(0x00); 
+    _serial->write(0x00);     
+}
+
+// Save Configuration in Non-Volatile Memory Function
+void OrbisBR::saveConfiguration()
+{
+    _serial->write(0x63);  // 'c' save to non-volatile
+}
+
+
+// sample data function
 void OrbisBR::sample()
 {
     _lastConversion = SteeringEncoderConversion_s();
@@ -67,7 +113,7 @@ void OrbisBR::sample()
     
     if (_serial->available() < 4) // check if received all 4 bytes
     { 
-        calibStatus.errors.noData = true;
+        _lastConversion.errors.noData = true;
         _lastConversion.status = SteeringEncoderStatus_e::STEERING_ENCODER_ERROR;
         return;
     }   
@@ -79,7 +125,7 @@ void OrbisBR::sample()
 
     if (echo != 0x64)
     {
-        calibStatus.errors.noData = true;
+        _lastConversion.errors.noData = true;
         _lastConversion.status = SteeringEncoderStatus_e::STEERING_ENCODER_ERROR;
         return;
     }
@@ -104,6 +150,8 @@ void OrbisBR::sample()
         : SteeringEncoderStatus_e::STEERING_ENCODER_NOMINAL;
 }
 
+
+// check/flag for individual errors
 void OrbisBR::decodeErrors(uint8_t general, uint8_t detailed)
 {
     // General bits error low (0)
@@ -119,36 +167,23 @@ void OrbisBR::decodeErrors(uint8_t general, uint8_t detailed)
 }
 
 
+// function that convert bits to angle
+SteeringEncoderConversion_s OrbisBR::convert() 
+{
+
+    float angle = (((float)_position_data - 8192) / 8192.0f) * 180.0f;
+    
+    _lastConversion.raw = _position_data;
+    _lastConversion.angle = angle;
+    return _lastConversion;
+}
+
+// make sure not sampling too fast
 void OrbisBR::timedSample(uint32_t intervalMs)
 {
     if (millis() - _lastSampleTime >= intervalMs)
     {
         _lastSampleTime = millis();
-        sample();   // call your existing sampling logic
+        sample();   // call existing sampling logic
     }
-}
-
-
-SteeringEncoderConversion_s OrbisBR::convert() // convert raw binary code, to a this struct. Readable for the car. 
-{
-    _lastConversion.raw = _position_data;
-    _lastConversion.angle = (_position_data * ORBIS_BR_SCALE) + _offset;
-
-    // Apply modulo
-    while (_lastConversion.angle < -180.0f)
-        _lastConversion.angle += 360.0f;
-
-    while (_lastConversion.angle > 180.0f)
-        _lastConversion.angle -= 360.0f;
-
-    // Apply wraparound fix
-    if (ORBIS_BR_FLIP_DIRECTION)
-        _lastConversion.angle *= -1.0f;
-
-    return _lastConversion;
-}
-
-void OrbisBR::setOffset(float newOffset)
-{
-    _offset = newOffset;
 }
