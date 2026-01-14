@@ -37,6 +37,7 @@ public:
     void sample() override;
     SteeringEncoderConversion_s convert() override;
     void timedSample(uint32_t intervalMs = 500);
+    SteeringEncoderConversion_s position();
 
 private:
 // Data
