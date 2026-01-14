@@ -188,7 +188,7 @@ void OrbisBR::timedSample(uint32_t intervalMs)
     }
 }
 
-SteeringEncoderConversion_s position();
+SteeringEncoderConversion_s position()
 {
     return _lastConversion;
 }
