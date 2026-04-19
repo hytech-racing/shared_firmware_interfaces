@@ -24,19 +24,29 @@ private:
     const int _spiPinSDO;
     const int _spiPinCLK;
     const int _spiSpeed;
+    int _currentChannel;
 
     /**
      * Samples the MCP_ADC over SPI. Samples all eight channels and, in accordance with the AnalogMultiSensor's function
      * contract, stores the raw sampled values into each AnalogChannel's lastSample instance variable.
      */
     void _sample() override;
-    
+
+    void _dma_callback();
+
+    bool _dma_busy;
+    EventResponder _spi_event;
+
+    constexpr static size_t buffer_size = 3;
+    std::array<uint8_t, buffer_size> _rx_buf;
+    std::array<uint8_t, buffer_size> _tx_buf;
+
 public:
     /* Constructors */
     MCP_ADC(int spiPinCS, const int spiPinSDI, const int spiPinSDO, const int spiPinCLK, const int spiSpeed, const float scales[MCP_ADC_NUM_CHANNELS], const float offsets[MCP_ADC_NUM_CHANNELS]);
 
     /* Functions */
-
+    void init();
     /**
      * Calls sample() and convert(). After calling tick(), this MCP_ADC's data can be accessed using the get() command.
      */
