@@ -43,7 +43,9 @@ void handle_CAN_setup(CAN_DEVICE& CAN_dev, uint32_t baudrate, void (*on_recv_fun
 enum CANInterfaceType_e
 {
     ACU,
+    CCU,
     CHARGER,
+    EM,
     FAUX,
     RAUX,
     TELEM,
